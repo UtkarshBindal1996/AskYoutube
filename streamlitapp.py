@@ -3,7 +3,6 @@ import torch
 from sentence_transformers import SentenceTransformer
 from deepmultilingualpunctuation import PunctuationModel
 import youtube_transcript_api
-import nltk
 from validators import url  # Install validators library (pip install validators)
 import urllib
 import google.generativeai as genai
@@ -35,8 +34,6 @@ safety_settings = [
 ]
 
 genai.configure(api_key=st.secrets["google_secret"])
-
-nltk.download('punkt')
 
 @st.cache_data
 def get_youtube_video_id(url):
@@ -119,7 +116,7 @@ def process_video(youtube_url):
 
           document_chunks = puctModel.restore_punctuation(document_chunks)
 
-          document_chunks = nltk.sent_tokenize(document_chunks)
+          document_chunks = document_chunks.split(".")
           document_embeddings = embed_document(document_chunks)
           return document_embeddings, document_chunks
         else:
